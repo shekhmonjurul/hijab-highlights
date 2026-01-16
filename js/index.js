@@ -2,6 +2,8 @@ const deep_navy_div = document.getElementById("deep-navy"); //images div
 const light_brown_div = document.getElementById("light-brown"); //images div
 const plum_pink_div = document.getElementById("plum-pink"); //images div
 const sea_geern_div = document.getElementById("sea-green"); //images div
+const whatsapp_link = document.getElementById("whatsapp"); // select a tag
+const product_color = document.getElementById("product-color"); //select select tag
 
 const images = {
     light_brown: [
@@ -119,6 +121,18 @@ RenderProductList(plum_pink, plum_pink_div);
 RenderProductList(sea_geern, sea_geern_div);
 
 
+// handle whatsapp click event
+whatsapp_link.addEventListener("click", () => {
+    let message = `
+    product color: ${product_color.value}
+    enter your message here:
+    `;
+
+    let url = "https://wa.me/8801787574805?text=" + encodeURIComponent(message);
+    window.open(url);
+
+});
+
 
 // create a new image function
 function ImageFunc(src, alt, appendNode) {
@@ -129,6 +143,8 @@ function ImageFunc(src, alt, appendNode) {
     appendNode.appendChild(img)
 }
 
+
+// rendering image list 
 function RenderProductList(items, appendChild) {
     for (const item of items) {
         ImageFunc(item.image_src, item.category_name, appendChild);
