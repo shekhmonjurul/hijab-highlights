@@ -2,17 +2,139 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="/images/logo/logo.jpg" type="image/x-icon">
-    <title>Order Form</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Order Form - Tailwind CSS</title>
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="h-screen">
-    <iframe
-        src="https://docs.google.com/forms/d/e/1FAIpQLSc2OZnWVDxBZTxAUMvrrZSWl3vBuSeFqTEZ2uYsAFk6apRpTw/viewform?embedded=true"
-        width="100%" height="1660" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+<body class="min-h-screen bg-gradient-to-br from-indigo-600 to-cyan-500 flex items-center justify-center p-4">
+
+    <div class="w-full max-w-xl bg-white rounded-2xl shadow-2xl p-8">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Product Order Form</h2>
+
+        <form class="space-y-4" id="order-form">
+
+            <!-- Name -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input type="text" placeholder="Enter your name" required
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            </div>
+
+            <!-- Phone -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input type="tel" placeholder="01XXXXXXXXX" required
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            </div>
+
+            <!-- Address -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <textarea rows="2" placeholder="House, Road, Area"
+                    class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+            </div>
+
+            <!-- Thana & Jela -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Thana</label>
+                    <input type="text" placeholder="Thana"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Jela</label>
+                    <input type="text" placeholder="District"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+                </div>
+            </div>
+
+            <!-- Bibag & Color -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Bibag (Division)</label>
+                    <select
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <option>Select Division</option>
+                        <option>Dhaka</option>
+                        <option>Chattogram</option>
+                        <option>Rajshahi</option>
+                        <option>Khulna</option>
+                        <option>Barishal</option>
+                        <option>Sylhet</option>
+                        <option>Rangpur</option>
+                        <option>Mymensingh</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Product Color</label>
+                    <select id="colorSelect"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <option value="">Select Color</option>
+                        <option value="Red">Red</option>
+                        <option value="Blue">Blue</option>
+                        <option value="Black">Black</option>
+                        <option value="White">White</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Selected Color List -->
+            <div id="colorList" class="space-y-3"></div>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-semibold text-lg hover:opacity-90 transition">
+                Place Order
+            </button>
+
+        </form>
+    </div>
+
+    <script>
+        const colorSelect = document.getElementById('colorSelect');
+        const colorList = document.getElementById('colorList');
+        const colors = {};
+
+        colorSelect.addEventListener('change', () => {
+            const color = colorSelect.value;
+            if (!color || colors[color]) return;
+
+            colors[color] = 1;
+
+            const item = document.createElement('div');
+            item.className = 'flex items-center justify-between border rounded-xl p-3';
+            item.dataset.color = color;
+
+            item.innerHTML = `
+        <span class="font-medium">${color}</span>
+        <div class="flex items-center gap-2">
+          <button type="button" class="px-3 py-1 rounded-lg bg-gray-200" onclick="updateQty('${color}', -1)">-</button>
+          <span id="qty-${color}">1</span>
+          <button type="button" class="px-3 py-1 rounded-lg bg-gray-200" onclick="updateQty('${color}', 1)">+</button>
+          <button type="button" class="ml-2 px-3 py-1 rounded-lg bg-red-500 text-white" onclick="removeColor('${color}')">✕</button>
+        </div>
+      `;
+
+            colorList.appendChild(item);
+            colorSelect.value = '';
+        });
+
+        function removeColor(color) {
+            delete colors[color];
+            const item = document.querySelector(`[data-color="${color}"]`);
+            if (item) item.remove();
+        }
+
+        function updateQty(color, change) {
+            if (!colors[color]) return;
+            colors[color] = Math.max(1, colors[color] + change);
+            document.getElementById(`qty-${color}`).innerText = colors[color];
+        }
+    </script>
 </body>
 
 </html>

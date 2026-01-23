@@ -1,0 +1,58 @@
+const colorSelect = document.getElementById('colorSelect');
+const colorList = document.getElementById('colorList');
+const orderForm = document.getElementById('order-form');
+const colors = {};
+
+colorSelect.addEventListener('change', (evnt) => {
+    const color = colorSelect.value;
+    if (!color || colors[color]) return;
+
+    colors[color] = 1;
+
+    const item = document.createElement('div');
+    item.className = 'flex items-center justify-between border rounded-xl p-3';
+    item.dataset.color = color;
+
+    item.innerHTML = `
+        <span class="font-medium">${color}</span>
+        <div class="flex items-center gap-2">
+          <button type="button" class="px-3 py-1 rounded-lg bg-gray-200" onclick="updateQty('${color}', -1)">-</button>
+          <span id="qty-${color}">1</span>
+          <button type="button" class="px-3 py-1 rounded-lg bg-gray-200" onclick="updateQty('${color}', 1)">+</button>
+          <button type="button" class="ml-2 px-3 py-1 rounded-lg bg-red-500 text-white" onclick="removeColor('${color}')">✕</button>
+        </div>
+      `;
+
+    colorList.appendChild(item);
+    colorSelect.value = '';
+});
+
+orderForm.addEventListener("submit", (evnt) => {
+    evnt.preventDefault();
+    const formData = new FormData(evnt.target);
+    const formFileds = ['name', 'phone', 'address', 'thana', 'district', 'division'];
+    const formValues = {};
+
+    formFileds.forEach((filed) => {
+        formValues[filed] = encodeURIComponent(formData.get(filed));
+    });
+
+    formValues['color'] = encodeURIComponent(JSON.stringify(colors));
+
+    const prefillLink = `https://docs.google.com/forms/d/e/1FAIpQLSfzbHc_Juv4z4ObauHgQb-owoSbzzcz9zh7FO96IvELV3cPTQ/viewform?usp=pp_url&entry.1889973036=${formValues?.name}&entry.1545546885=${formValues?.phone}&entry.439599756=${formValues?.address}&entry.738126846=${formValues?.thana}&entry.665969784=${formValues?.district}&entry.140247102=${formValues?.division}&entry.22687757=${formValues?.color}`
+    window.location.href = prefillLink;
+
+    console.log("form data: ", prefillLink)
+})
+
+function removeColor(color) {
+    delete colors[color];
+    const item = document.querySelector(`[data-color="${color}"]`);
+    if (item) item.remove();
+}
+
+function updateQty(color, change) {
+    if (!colors[color]) return;
+    colors[color] = Math.max(1, colors[color] + change);
+    document.getElementById(`qty-${color}`).innerText = colors[color];
+}
