@@ -57,7 +57,9 @@ orderForm.addEventListener("submit", (evnt) => {
 
     formValues['color'] = encodeURIComponent(JSON.stringify(colors));
 
-    const prefillLink = `https://docs.google.com/forms/d/e/1FAIpQLSfzbHc_Juv4z4ObauHgQb-owoSbzzcz9zh7FO96IvELV3cPTQ/viewform?usp=pp_url&entry.1889973036=${formValues?.name}&entry.1545546885=${formValues?.phone}&entry.439599756=${formValues?.address}&entry.738126846=${formValues?.thana}&entry.665969784=${formValues?.district}&entry.140247102=${formValues?.division}&entry.22687757=${formValues?.color}`
+    const prefillLink = `https://docs.google.com/forms/d/e/1FAIpQLSfzbHc_Juv4z4ObauHgQb-owoSbzzcz9zh7FO96IvELV3cPTQ/viewform?usp=pp_url&entry.1889973036=${formValues?.name}&entry.1545546885=${formValues?.phone}&entry.439599756=${formValues?.address}&entry.738126846=${formValues?.thana}&entry.665969784=${formValues?.district}&entry.140247102=${formValues?.division}&entry.22687757=${formValues?.color}&entry.892842935=${total.textContent}&entry.1500929870=${delivery.textContent}&entry.1289613468=${grandTotal.textContent}`
+
+
     window.location.href = prefillLink;
 
     console.log("form data: ", prefillLink)
