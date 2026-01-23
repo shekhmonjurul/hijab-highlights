@@ -7,6 +7,17 @@ const grandTotal = document.getElementById('grand-total');
 
 const colors = {};
 const fixdPrice = 650;
+const bdDivisions = [
+    "Dhaka",
+    "Chattogram",
+    "Rajshahi",
+    "Khulna",
+    "Barishal",
+    "Sylhet",
+    "Rangpur",
+    "Mymensingh"
+];
+
 
 
 
@@ -62,7 +73,10 @@ window.addEventListener("change", () => {
 
     const formData = new FormData(orderForm);
 
-    const inDhaka = (formData.get('division') === 'Dhaka') ? 80 : 130;
+    const division = formData.get('division');
+    let inDhaka = (division === 'Dhaka') ? 80 : 130;
+    inDhaka = (bdDivisions.includes(division)) ? inDhaka : 0;
+
     delivery.textContent = `Delivery : ${inDhaka} BDT`;
 
     grandTotal.textContent = `Grand Total : ${subTotal + inDhaka} BDT`;
@@ -92,7 +106,11 @@ function updateQty(color, change) {
 
     const formData = new FormData(orderForm);
 
-    const inDhaka = (formData.get('division') === 'Dhaka') ? 80 : 130;
+    const division = formData.get('division');
+
+    let inDhaka = (division === 'Dhaka') ? 80 : 130;
+    inDhaka = (bdDivisions.includes(division)) ? inDhaka : 0;
+
 
     delivery.textContent = `Delivery : ${inDhaka} BDT`;
 
