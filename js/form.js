@@ -1,7 +1,14 @@
 const colorSelect = document.getElementById('colorSelect');
 const colorList = document.getElementById('colorList');
 const orderForm = document.getElementById('order-form');
+const total = document.getElementById('total');
+const delivery = document.getElementById('delivery');
+const grandTotal = document.getElementById('grand-total');
+
 const colors = {};
+const fixdPrice = 650;
+
+
 
 colorSelect.addEventListener('change', (evnt) => {
     const color = colorSelect.value;
@@ -30,7 +37,7 @@ colorSelect.addEventListener('change', (evnt) => {
 orderForm.addEventListener("submit", (evnt) => {
     evnt.preventDefault();
     const formData = new FormData(evnt.target);
-    const formFileds = ['name', 'phone', 'address', 'thana', 'district', 'division'];
+    const formFileds = ['name', 'phone', 'address', 'thana', 'district', 'division', 'total'];
     const formValues = {};
 
     formFileds.forEach((filed) => {
@@ -45,6 +52,23 @@ orderForm.addEventListener("submit", (evnt) => {
     console.log("form data: ", prefillLink)
 })
 
+window.addEventListener("change", () => {
+    const values = Object.values(colors);
+    const sum = values.reduce((acc, current) => acc + current, 0);
+
+
+    const subTotal = fixdPrice * sum;
+    total.textContent = `Totol : ${subTotal} BDT`;
+
+    const formData = new FormData(orderForm);
+
+    const inDhaka = (formData.get('division') === 'Dhaka') ? 80 : 130;
+    delivery.textContent = `Delivery : ${inDhaka} BDT`;
+
+    grandTotal.textContent = `Grand Total : ${subTotal + inDhaka} BDT`;
+})
+
+
 function removeColor(color) {
     delete colors[color];
     const item = document.querySelector(`[data-color="${color}"]`);
@@ -55,4 +79,7 @@ function updateQty(color, change) {
     if (!colors[color]) return;
     colors[color] = Math.max(1, colors[color] + change);
     document.getElementById(`qty-${color}`).innerText = colors[color];
+
+    total.textContent = `Total: ${fixdPrice * colors[color]} BDT`;
+
 }
